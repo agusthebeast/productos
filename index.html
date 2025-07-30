@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Productos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Gestión de Productos</h1>
+
+    <form id="producto-form">
+      <input type="hidden" id="id" />
+      <input type="text" id="nombre" placeholder="Nombre" required />
+      <input type="text" id="codigo" placeholder="Código (opcional)" />
+      <input type="number" id="cantidad" placeholder="Cantidad" required />
+      <input type="number" id="precioCompra" placeholder="Precio de compra" required />
+      <input type="number" id="precioVenta" placeholder="Precio de venta" required />
+      <input type="file" id="foto" accept="image/*" />
+      <button type="submit">Guardar producto</button>
+    </form>
+
+    <input type="text" id="buscador" placeholder="Buscar por nombre o código..." />
+
+    <div id="productos-container" class="catalogo"></div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
