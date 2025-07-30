@@ -1,8 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// Configuración de Firebase
+// Firebase config (sin Storage)
 const firebaseConfig = {
   apiKey: "AIzaSyDlprMxfLhMPMHeJ44oaeVj1Tqzw_s49Yo",
   authDomain: "productos-81877.firebaseapp.com",
@@ -14,7 +13,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 const form = document.getElementById("producto-form");
 const contenedor = document.getElementById("productos-container");
@@ -24,6 +22,7 @@ let productos = [];
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const id = form["id"].value;
   const nombre = form["nombre"].value;
   const codigo = form["codigo"].value;
@@ -36,9 +35,18 @@ form.addEventListener("submit", async (e) => {
   let urlFoto = "";
 
   if (archivo) {
-    const storageRef = ref(storage, `productos/${Date.now()}_${archivo.name}`);
-    await uploadBytes(storageRef, archivo);
-    urlFoto = await getDownloadURL(storageRef);
+    const formData = new FormData();
+    formData.append("file", archivo);
+    formData.append("upload_preset", "productos");
+    formData.append("folder", "productos");
+
+    const res = await fetch("https://api.cloudinary.com/v1_1/dlrbwgtfa/image/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    urlFoto = data.secure_url;
   }
 
   const datos = { nombre, codigo, cantidad, compra, venta, ganancia, foto: urlFoto };
